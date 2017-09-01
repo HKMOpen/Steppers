@@ -81,7 +81,8 @@ public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(final SteppersViewHolder holder, final int position) {
+    public void onBindViewHolder(final SteppersViewHolder holder, int p) {
+        final int position = holder.getAdapterPosition();
         final SteppersItem steppersItem = items.get(position);
 
         holder.setChecked(position < currentStep);
@@ -200,6 +201,11 @@ public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
         this.beforeStep = currentStep;
         this.currentStep = this.currentStep + 1;
         notifyItemRangeChanged(removeStep, currentStep);
+
+        if(config.getOnChangeStepAction() != null) {
+            SteppersItem steppersItem = items.get(this.currentStep);
+            config.getOnChangeStepAction().onChangeStep(this.currentStep, steppersItem);
+        }
     }
 
     protected void setItems(List<SteppersItem> items) {
